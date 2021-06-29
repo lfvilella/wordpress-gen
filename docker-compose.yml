@@ -1,0 +1,43 @@
+version: '3.1'
+
+services:
+  db:
+    image: mysql:5.7
+    restart: ${DOCKER_RESTART:-always}
+    volumes:
+      - vdb:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: "${MYSQL_DATABASE:-wpdb}"
+      MYSQL_USER: "${MYSQL_USER:-wpuser}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD:-wppass}"
+      MYSQL_RANDOM_ROOT_PASSWORD: "1"
+
+  wp:
+    image: wordpress:latest
+    restart: ${DOCKER_RESTART:-always}
+    ports:
+      - "${HOST_PORT}80"
+    volumes:
+      - vwp:/var/www/html
+    depends_on:
+      - db
+    links:
+      - db:mysql-host
+    environment:
+      WORDPRESS_DB_HOST: "mysql-host"
+      WORDPRESS_DB_USER: "${MYSQL_USER:-wpuser}"
+      WORDPRESS_DB_PASSWORD: "${MYSQL_PASSWORD:-wppass}"
+      WORDPRESS_DB_NAME: "${MYSQL_DATABASE:-wpdb}"
+      VIRTUAL_HOST: "${WORDPRESS_DOMAIN:-localhost}"
+    extra_hosts:
+      - "${WORDPRESS_DOMAIN:-localhost}:127.0.0.1"
+
+volumes:
+  vwp:
+  vdb:
+
+networks:
+  default:
+    external:
+      name: nginx-gateway
+
