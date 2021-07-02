@@ -36,7 +36,7 @@ services:
       dockerfile: nginx.Dockerfile
       context: .
     ports:
-      - "${HOST_PORT}443"
+      - "${HOST_PORT}80"
     depends_on:
       - wp
     links:
@@ -44,9 +44,11 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - vwp:/var/www/html
+    extra_hosts:
+      - "${WORDPRESS_DOMAIN:-localhost}:127.0.0.1"
     environment:
       VIRTUAL_HOST: "${WORDPRESS_DOMAIN:-localhost}"
-      VIRTUAL_PORT: 443
+      VIRTUAL_PORT: 80
  
 volumes:
   vwp:

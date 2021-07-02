@@ -3,7 +3,7 @@ help: ## This help.
 
 site: ## Create a new WordPress instance
 	@docker network create nginx-gateway | true
-	@docker run -d -p 80:80 -p 443:443 -v /var/run/docker.sock:/tmp/docker.sock:ro --network nginx-gateway --restart always nginxproxy/nginx-proxy | true
+	@docker run -d -p 80:80 -v /var/run/docker.sock:/tmp/docker.sock:ro --network nginx-gateway --restart always nginxproxy/nginx-proxy | true
 	@echo "Enter the domain:"; \
 	read WP_DOMAIN; \
 	mkdir -p sites/$$WP_DOMAIN; \

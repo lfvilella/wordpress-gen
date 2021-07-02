@@ -5,3 +5,5 @@ RUN openssl req -x509 -nodes -days 365 \
         -keyout /etc/ssl/private/nginx-selfsigned.key \
         -out /etc/ssl/certs/nginx-selfsigned.crt;
 
+RUN openssl rsa -in /etc/ssl/private/nginx-selfsigned.key -text > /etc/ssl/certs/nginx-selfsigned.pem
+
